@@ -23,8 +23,8 @@ public class Main extends Application {
     private Button _btn1;
     private Button _btn2;
     private Button _btn3;
-    protected File train;
-    protected File test;
+    protected File train = new File("/home/taabish/Desktop/Project_01/data/train");
+    protected File test = new File("/home/taabish/Desktop/Project_01/data/test");
 
 
     public static void main(String[] args) {
@@ -33,99 +33,108 @@ public class Main extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        primaryStage.setTitle("Spam Master 3000");
+        public void start(Stage primaryStage) throws Exception{
+            primaryStage.setTitle("Spam Master 3000");
 
-        BorderPane layout = new BorderPane();
-        layout.setPadding(new Insets(10));
-        GridPane left = new GridPane();
-        left.setPadding(new Insets(10, 10, 10 ,10));
+            BorderPane layout = new BorderPane();
+            layout.setPadding(new Insets(10));
+            GridPane left = new GridPane();
+            left.setPadding(new Insets(10, 10, 10 ,10));
 
-        Label btnLabel = new Label();
-        _btn1 = new Button("Open Training Set");
-        _btn1.setPadding(new Insets(10, 10, 10, 10));
-        left.add(_btn1, 0, 0);
+            Label btnLabel = new Label();
+            _btn1 = new Button("Open Training Set");
+            _btn1.setPadding(new Insets(10, 10, 10, 10));
+            left.add(_btn1, 0, 0);
 
-        Label trainSet = new Label();
-        _text1 = new TextField();
-        left.add(_text1, 1, 0);
-        left.add(trainSet, 1, 3);
-        _text1.setMinWidth(300);
-        _text1.setPromptText("Select the Training data path");
+            Label trainSet = new Label();
+            _text1 = new TextField();
+            left.add(_text1, 1, 0);
+            left.add(trainSet, 1, 3);
+            _text1.setMinWidth(300);
+            _text1.setPromptText("Select the Training data path");
 
-        Label btnLabel2 = new Label();
-        _btn2 = new Button("Open Test Set");
-        _btn2.setPadding(new Insets(10, 23, 10, 22));
-        left.add(_btn2, 0, 1);
+            Label btnLabel2 = new Label();
+            _btn2 = new Button("Open Test Set");
+            _btn2.setPadding(new Insets(10, 23, 10, 22));
+            left.add(_btn2, 0, 1);
 
-        Label testSet = new Label();
-        _text2 = new TextField();
-        left.add(_text2, 1, 1);
-        left.add(testSet, 1, 3);
-        _text2.setMinWidth(300);
-        _text2.setPromptText("Select the Test data path");
+            Label testSet = new Label();
+            _text2 = new TextField();
+            left.add(_text2, 1, 1);
+            left.add(testSet, 1, 3);
+            _text2.setMinWidth(300);
+            _text2.setPromptText("Select the Test data path");
 
-        Label btnLabel3 = new Label();
-        _btn3 = new Button("Submit");
-        _btn3.setPadding(new Insets(10));
-        layout.setBottom(_btn3);
-        layout.setAlignment(_btn3, Pos.BOTTOM_RIGHT);
+            Label btnLabel3 = new Label();
+            _btn3 = new Button("Submit");
+            _btn3.setPadding(new Insets(10));
+            layout.setBottom(_btn3);
+            layout.setAlignment(_btn3, Pos.BOTTOM_RIGHT);
 
-        _btn1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+            _btn1.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
 
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                directoryChooser.setInitialDirectory(new File("."));
-                File file = directoryChooser.showDialog(primaryStage);
-                System.out.println("Success");
-                if (file == null) {
-                    testSet.setText("");
-                    trainSet.setText("Training Set directory not selected");
-                } else {
-                    _text1.setText(file.getPath());
-                    trainSet.setText("");
+                    DirectoryChooser directoryChooser = new DirectoryChooser();
+                    directoryChooser.setInitialDirectory(new File("."));
+                    File file = directoryChooser.showDialog(primaryStage);
+                    if (file == null) {
+                        testSet.setText("");
+                        trainSet.setText("Training Set directory not selected");
+                    } else {
+                        _text1.setText(file.getPath());
+                        trainSet.setText("");
+                        testSet.setText("");
+                    }
+                    train = file;
                 }
-                train = file;
-            }
-        });
+            });
 
-        _btn2.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+            _btn2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
 
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                directoryChooser.setInitialDirectory(new File("."));
-                File file = directoryChooser.showDialog(primaryStage);
-                System.out.println("Success2");
-                if (file == null) {
-                    trainSet.setText("");
-                    testSet.setText("Test Set directory not selected");
-                } else {
-                    _text2.setText(file.getPath());
-                    testSet.setText("");
+                    DirectoryChooser directoryChooser = new DirectoryChooser();
+                    directoryChooser.setInitialDirectory(new File("."));
+                    File file = directoryChooser.showDialog(primaryStage);
+                    if (file == null) {
+                        trainSet.setText("");
+                        testSet.setText("Test Set directory not selected");
+                    } else {
+                        _text2.setText(file.getPath());
+                        trainSet.setText("");
+                        testSet.setText("");
+                    }
+                    test = file;
                 }
-                test = file;
-            }
 
-        });
+            });
 
-        _btn3.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                primaryStage.close();
-            }
-        });
+             SpamFilter hamSpam = new SpamFilter(train, test);
 
-        left.setHgap(10);
-        left.setVgap(10);
-        layout.setLeft(left);
-        Scene scene = new Scene(layout, 500, 200);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+            _btn3.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    primaryStage.close();
+                    try {
+                        hamSpam.train();
+                    } catch (IOException e){
+                        System.out.println("Wrong Directory Selected");
+                    }
+                }
+            });
 
 
+            left.setHgap(10);
+            left.setVgap(10);
+            layout.setLeft(left);
+            Scene scene = new Scene(layout, 500, 200);
+            primaryStage.setScene(scene);
+            primaryStage.show();
 
-    }
+
+
+
+        }
 
 }

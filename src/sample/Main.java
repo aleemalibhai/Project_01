@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.DirectoryChooser;
+
+import javax.xml.crypto.Data;
 import java.io.*;
 
 
@@ -23,8 +25,8 @@ public class Main extends Application {
     private Button _btn1;
     private Button _btn2;
     private Button _btn3;
-    protected File train = new File("/home/taabish/Desktop/Project_01/data/train");
-    protected File test = new File("/home/taabish/Desktop/Project_01/data/test");
+    protected File train;
+    protected File test;
 
 
     public static void main(String[] args) {
@@ -110,21 +112,6 @@ public class Main extends Application {
 
             });
 
-             SpamFilter hamSpam = new SpamFilter(train, test);
-
-            _btn3.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    primaryStage.close();
-                    try {
-                        hamSpam.train();
-                    } catch (IOException e){
-                        System.out.println("Wrong Directory Selected");
-                    }
-                }
-            });
-
-
             left.setHgap(10);
             left.setVgap(10);
             layout.setLeft(left);
@@ -132,9 +119,60 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
+        _btn3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                primaryStage.close();
+                try {
+                    SpamFilter hamSpam = new SpamFilter(train, test);
+                    hamSpam.train();
+                    hamSpam.test();
+                } catch (IOException e){
+                    System.out.println("Wrong Directory Selected");
+                }
+                new SecondStage();
+            }
+        });
+    }
+
+    public class SecondStage extends Stage {
+        private TableView<TestFile> mail;
+
+        SecondStage() {
+            BorderPane layout2 = new BorderPane();
+            GridPane temp = new GridPane();
+
+            TableColumn<TestFile, String> fileCol = new TableColumn<>("File");
+            fileCol.setPrefWidth(400);
+            fileCol.setCellValueFactory(new PropertyValueFactory<>("Filename"));
+
+            TableColumn<TestFile, String> classCol = new TableColumn<>("Actual Class");
+            classCol.setPrefWidth(200);
+            classCol.setCellValueFactory(new PropertyValueFactory<>("ActualClass"));
+
+            TableColumn<TestFile, String probCol = new TableColumn<>("Spam Probability");
+            probCol.setPrefWidth(200);
+            probCol.setCellValueFactory(new PropertyValueFactory<>("SpamProbRounded"));
 
 
+            this.mail = new TableView<>();
+            this.mail.getColumns().add(fileCol);
+            this.mail.getColumns().add(classCol);
+            this.mail.getColumns().add(probCol);
 
+            GridPane bottom = new GridPane();
+            bottom.setPadding(new Insets(10));
+            bottom.setHgap(10);
+            bottom.setVgap(10);
+
+            layout2.setCenter(mail);
+
+            Scene scene = new Scene(layout2, 1000, 500);
+            this.setScene(scene);
+            this.show();
+            this.mail.setItems(DataSource.getAllData());
         }
+
+    }
 
 }

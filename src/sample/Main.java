@@ -11,10 +11,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import java.io.*;
-import java.util.*;
 
 
 
@@ -45,7 +43,7 @@ public class Main extends Application {
 
         Label btnLabel = new Label();
         _btn1 = new Button("Open Training Set");
-        _btn1.setPadding(new Insets(10));
+        _btn1.setPadding(new Insets(10, 10, 10, 10));
         left.add(_btn1, 0, 0);
 
         Label trainSet = new Label();
@@ -54,6 +52,24 @@ public class Main extends Application {
         left.add(trainSet, 1, 3);
         _text1.setMinWidth(300);
         _text1.setPromptText("Select the Training data path");
+
+        Label btnLabel2 = new Label();
+        _btn2 = new Button("Open Test Set");
+        _btn2.setPadding(new Insets(10, 23, 10, 22));
+        left.add(_btn2, 0, 1);
+
+        Label testSet = new Label();
+        _text2 = new TextField();
+        left.add(_text2, 1, 1);
+        left.add(testSet, 1, 3);
+        _text2.setMinWidth(300);
+        _text2.setPromptText("Select the Test data path");
+
+        Label btnLabel3 = new Label();
+        _btn3 = new Button("Submit");
+        _btn3.setPadding(new Insets(10));
+        layout.setBottom(_btn3);
+        layout.setAlignment(_btn3, Pos.BOTTOM_RIGHT);
 
         _btn1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -64,7 +80,8 @@ public class Main extends Application {
                 File file = directoryChooser.showDialog(primaryStage);
                 System.out.println("Success");
                 if (file == null) {
-                    trainSet.setText("No Directory Selected");
+                    testSet.setText("");
+                    trainSet.setText("Training Set directory not selected");
                 } else {
                     _text1.setText(file.getPath());
                     trainSet.setText("");
@@ -72,18 +89,6 @@ public class Main extends Application {
                 train = file;
             }
         });
-
-        Label btnLabel2 = new Label();
-        _btn2 = new Button("Open Test Set");
-        _btn2.setPadding(new Insets(10));
-        left.add(_btn2, 0, 1);
-
-        Label testSet = new Label();
-        _text2 = new TextField();
-        left.add(_text2, 1, 1);
-        left.add(testSet, 1, 3);
-        _text2.setMinWidth(300);
-        _text2.setPromptText("Select the Test data path");
 
         _btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -95,7 +100,7 @@ public class Main extends Application {
                 System.out.println("Success2");
                 if (file == null) {
                     trainSet.setText("");
-                    testSet.setText("No Directory Selected");
+                    testSet.setText("Test Set directory not selected");
                 } else {
                     _text2.setText(file.getPath());
                     testSet.setText("");
@@ -105,21 +110,15 @@ public class Main extends Application {
 
         });
 
-        Label btnLabel3 = new Label();
-        _btn3 = new Button("Submit");
-        _btn3.setPadding(new Insets(10));
-        layout.setBottom(_btn3);
-        layout.setAlignment(_btn3, Pos.BOTTOM_RIGHT);
-
         _btn3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 primaryStage.close();
             }
         });
-        
 
-
+        left.setHgap(10);
+        left.setVgap(10);
         layout.setLeft(left);
         Scene scene = new Scene(layout, 500, 200);
         primaryStage.setScene(scene);

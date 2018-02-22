@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +29,7 @@ public class Main extends Application {
     private Button _btn3;
     protected File train;
     protected File test;
+    public ObservableList<TestFile> data = FXCollections.observableArrayList();
 
 
     public static void main(String[] args) {
@@ -126,7 +129,7 @@ public class Main extends Application {
                 try {
                     SpamFilter hamSpam = new SpamFilter(train, test);
                     hamSpam.train();
-                    hamSpam.test();
+                    data = hamSpam.test();
                 } catch (IOException e){
                     System.out.println("Wrong Directory Selected");
                 }
@@ -138,20 +141,20 @@ public class Main extends Application {
     public class SecondStage extends Stage {
         private TableView<TestFile> mail;
 
+
         SecondStage() {
             BorderPane layout2 = new BorderPane();
-            GridPane temp = new GridPane();
 
             TableColumn<TestFile, String> fileCol = new TableColumn<>("File");
             fileCol.setPrefWidth(400);
-            fileCol.setCellValueFactory(new PropertyValueFactory<>("Filename"));
+            fileCol.setCellValueFactory(new PropertyValueFactory<>("FileName"));
 
             TableColumn<TestFile, String> classCol = new TableColumn<>("Actual Class");
             classCol.setPrefWidth(200);
             classCol.setCellValueFactory(new PropertyValueFactory<>("ActualClass"));
 
-            TableColumn<TestFile, String probCol = new TableColumn<>("Spam Probability");
-            probCol.setPrefWidth(200);
+            TableColumn<TestFile, Double> probCol = new TableColumn<>("Spam Probability");
+            probCol.setPrefWidth(400);
             probCol.setCellValueFactory(new PropertyValueFactory<>("SpamProbRounded"));
 
 
@@ -170,7 +173,7 @@ public class Main extends Application {
             Scene scene = new Scene(layout2, 1000, 500);
             this.setScene(scene);
             this.show();
-            this.mail.setItems(DataSource.getAllData());
+            this.mail.setItems(data);
         }
 
     }

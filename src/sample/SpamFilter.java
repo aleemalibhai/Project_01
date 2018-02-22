@@ -1,4 +1,7 @@
 package sample;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,9 +100,9 @@ public class SpamFilter{
     }
 
     // testing
-    public ArrayList<TestFile> test() throws IOException{
+    public ObservableList<TestFile> test() throws IOException{
         // return arraylist
-        ArrayList<TestFile> testedFiles = new ArrayList();
+        ObservableList<TestFile> testedFiles = FXCollections.observableArrayList();
         // parse through test directory
         // file array consisting of ham, spam folders
         File[] contents = testDir.listFiles();
@@ -114,9 +117,9 @@ public class SpamFilter{
                 testing.setFileName(file.getName());
                 // set actuall class
                 if (current.getName().equals("ham")){
-                    testing.setActualClass("ham");
+                    testing.setActualClass("Ham");
                 }else if (current.getName().equals("spam")){
-                    testing.setActualClass("spam");
+                    testing.setActualClass("Spam");
                 }
                 // get probability
                 // sum variable
@@ -147,6 +150,10 @@ public class SpamFilter{
         }
         return testedFiles;
     }
+
+
+
+
 
     private boolean isWord(String word) {
         String pattern = "^[a-zA-Z]+$";

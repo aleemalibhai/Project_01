@@ -111,6 +111,13 @@ public class Main extends Application {
         layout.setBottom(_btn3);
         layout.setAlignment(_btn3, Pos.BOTTOM_RIGHT);
 
+        _btn3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                primaryStage.close();
+            }
+        });
+        
 
 
         layout.setLeft(left);

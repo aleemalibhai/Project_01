@@ -80,9 +80,7 @@ public class SpamFilter{
         // add probabilities from ham file
         for (Map.Entry<String, Integer> entry: hamFreq.entrySet()){
             if (!prSW.containsKey(entry.getKey())){
-                if (!spamFreq.containsKey(entry.getKey())){
-                    prSW.put(entry.getKey(), (0 / ((hamFreq.get(entry.getKey())/hamCount)+(0/spamCount))));
-                }else{
+                if (spamFreq.containsKey(entry.getKey())){
                     prSW.put(entry.getKey(), (spamFreq.get(entry.getKey())/spamCount) / ((hamFreq.get(entry.getKey())/hamCount)+(spamFreq.get(entry.getKey())/spamCount)));
                 }
             }
@@ -90,9 +88,7 @@ public class SpamFilter{
         // check spamFreq to find probabilities of words not in ham
         for (Map.Entry<String, Integer> entry: spamFreq.entrySet()){
             if (!prSW.containsKey(entry.getKey())){
-                if (!hamFreq.containsKey(entry.getKey())){
-                    prSW.put(entry.getKey(), (spamFreq.get(entry.getKey())/spamCount) / ((0/hamCount)+(spamFreq.get(entry.getKey())/spamCount)));
-                }else{
+                if (hamFreq.containsKey(entry.getKey())){
                     prSW.put(entry.getKey(), (spamFreq.get(entry.getKey())/spamCount) / ((hamFreq.get(entry.getKey())/hamCount)+(spamFreq.get(entry.getKey())/spamCount)));
                 }
             }
@@ -140,10 +136,13 @@ public class SpamFilter{
                 for (String word: words){
                     // check if it is in training map, ignore if not present
                     if (prSW.containsKey(word)){
-                        sum += ((Math.log(1- prSW.get(word)))-(Math.log(prSW.get(word))));
+                        sum += ((Math.log(1 - (prSW.get(word))))-(Math.log(prSW.get(word))));
+                        if(prSW.get(word) >= 1) {
+                            System.out.println(prSW.get(word));
+                        }
                     }
                 }
-                testing.setSpamProbability(1/(1+Math.pow(Math.E, sum)));
+                testing.setSpamProbability(1/(1+(Math.pow(Math.E, sum))));
 
                 testedFiles.add(testing);
             }

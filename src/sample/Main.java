@@ -39,8 +39,9 @@ public class Main extends Application {
 
     @Override
         public void start(Stage primaryStage) throws Exception{
-            primaryStage.setTitle("Spam Master 3000");
+            primaryStage.setTitle("Test/Train Set Directory Selector");
 
+            // Creating the Directory stage layout
             BorderPane layout = new BorderPane();
             layout.setPadding(new Insets(10));
             GridPane left = new GridPane();
@@ -140,9 +141,12 @@ public class Main extends Application {
 
     public class SecondStage extends Stage {
         private TableView<TestFile> mail;
+        private TextField _text3;
+        private TextField _text4;
 
 
         SecondStage() {
+            this.setTitle("Spam Master 3000");
             BorderPane layout2 = new BorderPane();
 
             TableColumn<TestFile, String> fileCol = new TableColumn<>("File");
@@ -154,8 +158,8 @@ public class Main extends Application {
             classCol.setCellValueFactory(new PropertyValueFactory<>("ActualClass"));
 
             TableColumn<TestFile, Double> probCol = new TableColumn<>("Spam Probability");
-            probCol.setPrefWidth(400);
-            probCol.setCellValueFactory(new PropertyValueFactory<>("SpamProbRounded"));
+            probCol.setPrefWidth(300);
+            probCol.setCellValueFactory(new PropertyValueFactory<>("SpamProbability"));
 
 
             this.mail = new TableView<>();
@@ -168,9 +172,22 @@ public class Main extends Application {
             bottom.setHgap(10);
             bottom.setVgap(10);
 
-            layout2.setCenter(mail);
+            Label accuracy = new Label("Accuracy: ");
+            _text3 = new TextField();
+            bottom.add(accuracy, 0, 0);
+            bottom.add(_text3, 0, 1);
+            _text3.setText("Accuracy");
 
-            Scene scene = new Scene(layout2, 1000, 500);
+            Label precision = new Label("Precision: ");
+            _text4 = new TextField();
+            bottom.add(precision, 1, 0);
+            bottom.add(_text4, 1, 1);
+            _text4.setText("Precision");
+
+            layout2.setCenter(mail);
+            layout2.setBottom(bottom);
+
+            Scene scene = new Scene(layout2, 900, 500);
             this.setScene(scene);
             this.show();
             this.mail.setItems(data);

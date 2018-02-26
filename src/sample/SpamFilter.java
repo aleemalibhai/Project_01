@@ -150,6 +150,21 @@ public class SpamFilter{
         return testedFiles;
     }
 
+    public static double getAccuracy(){
+        double accuracy = 0;
+
+        // TODO: Calculate accuracy
+
+        return accuracy;
+    }
+
+    public static double getPrecision(){
+        double precision = 0;
+
+        // TODO : Calculate Precision
+
+        return precision;
+    }
 
 
 

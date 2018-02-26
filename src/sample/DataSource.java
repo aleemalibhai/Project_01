@@ -7,8 +7,6 @@ public class DataSource {
     public static ObservableList<TestFile> getAllData() {
         ObservableList<TestFile> data = FXCollections.observableArrayList();
 
-
-        
         return data;
 
     }

@@ -159,7 +159,7 @@ public class Main extends Application {
 
             TableColumn<TestFile, Double> probCol = new TableColumn<>("Spam Probability");
             probCol.setPrefWidth(300);
-            probCol.setCellValueFactory(new PropertyValueFactory<>("SpamProbability"));
+            probCol.setCellValueFactory(new PropertyValueFactory<>("SpamProbRounded"));
 
 
             this.mail = new TableView<>();
@@ -175,14 +175,14 @@ public class Main extends Application {
             Label accuracy = new Label("Accuracy: ");
             _text3 = new TextField();
             bottom.add(accuracy, 0, 0);
-            bottom.add(_text3, 0, 1);
-            _text3.setText("Accuracy");
+            bottom.add(_text3, 1, 0);
+            _text3.setText(Double.toString(SpamFilter.getAccuracy()));
 
             Label precision = new Label("Precision: ");
             _text4 = new TextField();
-            bottom.add(precision, 1, 0);
+            bottom.add(precision, 0, 1);
             bottom.add(_text4, 1, 1);
-            _text4.setText("Precision");
+            _text4.setText(Double.toString(SpamFilter.getPrecision()));
 
             layout2.setCenter(mail);
             layout2.setBottom(bottom);

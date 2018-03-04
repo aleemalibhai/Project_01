@@ -22,6 +22,7 @@ public class TestFile {
         return df.format(this.spamProbability);
     }
     public String getActualClass() { return this.actualClass; }
+    public String getGuessedClass() { return this.guessedClass; }
 
     public void setFileName(String value) { this.fileName = value; }
     public void setSpamProbability(double val) { this.spamProbability = val; }

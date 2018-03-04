@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 
 public class SpamFilter{
+    public static double threshold = 50.0;
     private double hamCount = 0;
     private double spamCount = 0;
     private File trainDir;
@@ -18,15 +19,17 @@ public class SpamFilter{
     private TreeMap<String,Double> prSW;
     private TreeMap<String,Integer> hamFreq;
     private TreeMap<String,Integer> spamFreq;
-    private static double threshold = 0;
+    private ObservableList<TestFile> tested;
 
     // obstinate with testing and training folders defined
     public SpamFilter(File trainDirectory, File testDirectory){
+
         trainDir = trainDirectory;
         testDir = testDirectory;
         hamFreq = new TreeMap<>();
         spamFreq = new TreeMap<>();
         prSW = new TreeMap<>();
+
     }
 
     public void train() throws IOException{
@@ -129,7 +132,7 @@ public class SpamFilter{
                 while (scanner.hasNext()) {
                     String word = scanner.next();
                     if (isWord(word)) {
-                        // populate word list per file
+                        // populate word list per fileham
                         if (!words.contains(word)) {
                             words.add(word);
                         }
@@ -149,31 +152,43 @@ public class SpamFilter{
                 testedFiles.add(testing);
             }
         }
+        this.tested = testedFiles;
         return testedFiles;
     }
 
-    public double getHamCount(){
-        return hamCount;
-    }
+    public double[] getPrecisionAccuracy(){
+        double[] precisionAccuracy = new double[2];
+        int truePos = 0;
+        int trueNeg = 0;
+        int falsePos = 0;
+        int falseNeg = 0;
 
-    public double getSpamCount(){
-        return spamCount;
-    }
+        for (TestFile file: this.tested){
 
-    public static double getAccuracy(){
-        double accuracy = 0;
+            // true positive classification as spam
+            if (file.getActualClass() == "spam" && file.getGuessedClass() == "spam"){
+                truePos ++;
 
-        // TODO: Calculate accuracy
+            // false negative classification of spam
+            } else if(file.getActualClass() == "spam" && file.getGuessedClass() == "ham"){
+                falseNeg ++;
 
-        return accuracy;
-    }
+            // true negative classification of spam
+            } else if(file.getActualClass() == "ham" && file.getGuessedClass() == "ham"){
+                trueNeg ++;
 
-    public static double getPrecision(){
-        double precision = 0;
+            // false positive classification of spam
+            } else if(file.getActualClass() == "ham" && file.getGuessedClass() == "spam"){
+                falsePos ++;
+            }
+        }
+        precisionAccuracy[0] = truePos/(falsePos + truePos);
+        precisionAccuracy[1] = (truePos + trueNeg)/(this.hamCount + this.spamCount);
 
         // TODO : Calculate Precision
 
-        return precision;
+
+        return precisionAccuracy;
     }
 
     private boolean isWord(String word) {

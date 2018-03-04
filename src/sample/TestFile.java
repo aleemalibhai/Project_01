@@ -24,4 +24,20 @@ public class TestFile {
     public void setFileName(String value) { this.fileName = value; }
     public void setSpamProbability(double val) { this.spamProbability = val; }
     public void setActualClass(String value) { this.actualClass = value; }
+
+    public static double getAccuracy(){
+        double accuracy = 0;
+
+        // TODO: Calculate accuracy
+
+        return accuracy;
+    }
+
+    public static double getPrecision(){
+        double precision = 0;
+
+        // TODO : Calculate Precision
+
+        return precision;
+    }
 }

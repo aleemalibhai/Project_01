@@ -62,6 +62,7 @@ public class SpamFilter{
                             hamFreq.put(element, 1);
                         }
                     }
+
                     // adjusts the spam frequency map according to words found in file
                 } else if (current.getName().equals("spam")) {
                     this.spamCount ++;
@@ -111,7 +112,7 @@ public class SpamFilter{
                 TestFile testing = new TestFile();
                 // set the name
                 testing.setFileName(file.getName());
-                // set actuall class
+                // set actual class
                 if (current.getName().equals("ham")){
                     testing.setActualClass("Ham");
                 }else if (current.getName().equals("spam")){
@@ -150,20 +151,12 @@ public class SpamFilter{
         return testedFiles;
     }
 
-    public static double getAccuracy(){
-        double accuracy = 0;
-
-        // TODO: Calculate accuracy
-
-        return accuracy;
+    public double getHamCount(){
+        return hamCount;
     }
 
-    public static double getPrecision(){
-        double precision = 0;
-
-        // TODO : Calculate Precision
-
-        return precision;
+    public double getSpamCount(){
+        return spamCount;
     }
 
 

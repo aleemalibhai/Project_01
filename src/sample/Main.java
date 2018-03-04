@@ -176,13 +176,13 @@ public class Main extends Application {
             _text3 = new TextField();
             bottom.add(accuracy, 0, 0);
             bottom.add(_text3, 1, 0);
-            _text3.setText(Double.toString(SpamFilter.getAccuracy()));
+            _text3.setText(Double.toString(TestFile.getAccuracy()));
 
             Label precision = new Label("Precision: ");
             _text4 = new TextField();
             bottom.add(precision, 0, 1);
             bottom.add(_text4, 1, 1);
-            _text4.setText(Double.toString(SpamFilter.getPrecision()));
+            _text4.setText(Double.toString(TestFile.getPrecision()));
 
             layout2.setCenter(mail);
             layout2.setBottom(bottom);

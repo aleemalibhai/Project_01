@@ -18,6 +18,7 @@ public class SpamFilter{
     private TreeMap<String,Double> prSW;
     private TreeMap<String,Integer> hamFreq;
     private TreeMap<String,Integer> spamFreq;
+    private static double threshold = 0;
 
     // obstinate with testing and training folders defined
     public SpamFilter(File trainDirectory, File testDirectory){
@@ -159,8 +160,21 @@ public class SpamFilter{
         return spamCount;
     }
 
+    public static double getAccuracy(){
+        double accuracy = 0;
 
+        // TODO: Calculate accuracy
 
+        return accuracy;
+    }
+
+    public static double getPrecision(){
+        double precision = 0;
+
+        // TODO : Calculate Precision
+
+        return precision;
+    }
 
     private boolean isWord(String word) {
         String pattern = "^[a-zA-Z]+$";

@@ -153,6 +153,7 @@ public class SpamFilter{
             }
         }
         this.tested = testedFiles;
+        System.out.println("tested formed");
         return testedFiles;
     }
 
@@ -184,9 +185,6 @@ public class SpamFilter{
         }
         precisionAccuracy[0] = truePos/(falsePos + truePos);
         precisionAccuracy[1] = (truePos + trueNeg)/(this.hamCount + this.spamCount);
-
-        // TODO : Calculate Precision
-
 
         return precisionAccuracy;
     }

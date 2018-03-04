@@ -30,6 +30,7 @@ public class Main extends Application {
     protected File train;
     protected File test;
     public ObservableList<TestFile> data = FXCollections.observableArrayList();
+    private double[] precisionAndAccuracy = new double[2];
 
 
     public static void main(String[] args) {
@@ -131,6 +132,7 @@ public class Main extends Application {
                     SpamFilter hamSpam = new SpamFilter(train, test);
                     hamSpam.train();
                     data = hamSpam.test();
+                    precisionAndAccuracy = hamSpam.getPrecisionAccuracy();
                 } catch (IOException e){
                     System.out.println("Wrong Directory Selected");
                 }
@@ -176,13 +178,13 @@ public class Main extends Application {
             _text3 = new TextField();
             bottom.add(accuracy, 0, 0);
             bottom.add(_text3, 1, 0);
-            _text3.setText(Double.toString(TestFile.getAccuracy()));
+            _text3.setText(Double.toString(precisionAndAccuracy[1]));
 
             Label precision = new Label("Precision: ");
             _text4 = new TextField();
             bottom.add(precision, 0, 1);
             bottom.add(_text4, 1, 1);
-            _text4.setText(Double.toString(TestFile.getPrecision()));
+            _text4.setText(Double.toString(precisionAndAccuracy[0]));
 
             layout2.setCenter(mail);
             layout2.setBottom(bottom);

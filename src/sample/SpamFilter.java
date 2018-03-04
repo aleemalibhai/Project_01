@@ -15,6 +15,7 @@ public class SpamFilter{
     public static double threshold = 0.5;
     private double hamCount = 0;
     private double spamCount = 0;
+    private double testTotal = 0;
     private File trainDir;
     private File testDir;
     private TreeMap<String,Double> prSW;
@@ -123,6 +124,7 @@ public class SpamFilter{
                 }else if (current.getName().equals("spam")){
                     testing.setActualClass("Spam");
                 }
+                this.testTotal++;
                 // get probability
                 // sum variable
                 double sum = 0;
@@ -154,7 +156,6 @@ public class SpamFilter{
             }
         }
         this.tested = testedFiles;
-        System.out.println("tested formed");
         return testedFiles;
     }
 
@@ -185,9 +186,8 @@ public class SpamFilter{
                 falsePos ++;
             }
         }
-        //System.out.printf("%d %d %d %d", truePos, falseNeg, trueNeg, falsePos);
         precisionAccuracy[0] = df.format(truePos/(falsePos + truePos));
-        precisionAccuracy[1] = df.format((truePos + trueNeg)/(this.hamCount + this.spamCount));
+        precisionAccuracy[1] = df.format((truePos + trueNeg)/(this.testTotal));
 
         return precisionAccuracy;
     }

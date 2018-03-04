@@ -29,9 +29,9 @@ public class TestFile {
     public void setActualClass(String value) { this.actualClass = value; }
     public void setguessedClass(){
         if (this.spamProbability >= SpamFilter.threshold){
-            guessedClass = "spam";
+            this.guessedClass = "spam";
         } else {
-            guessedClass = "ham";
+            this.guessedClass = "ham";
         }
     }
 

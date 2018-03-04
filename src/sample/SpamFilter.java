@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
@@ -11,7 +12,7 @@ import java.util.TreeMap;
 
 
 public class SpamFilter{
-    public static double threshold = 50.0;
+    public static double threshold = 0.5;
     private double hamCount = 0;
     private double spamCount = 0;
     private File trainDir;
@@ -148,7 +149,7 @@ public class SpamFilter{
                     }
                 }
                 testing.setSpamProbability(1/(1+(Math.pow(Math.E, sum))));
-
+                testing.setguessedClass();
                 testedFiles.add(testing);
             }
         }
@@ -157,34 +158,36 @@ public class SpamFilter{
         return testedFiles;
     }
 
-    public double[] getPrecisionAccuracy(){
-        double[] precisionAccuracy = new double[2];
-        int truePos = 0;
-        int trueNeg = 0;
-        int falsePos = 0;
-        int falseNeg = 0;
+    public String[] getPrecisionAccuracy(){
+        String[] precisionAccuracy = new String[2];
+        double truePos = 0;
+        double trueNeg = 0;
+        double falsePos = 0;
+        double falseNeg = 0;
+        DecimalFormat df = new DecimalFormat("0.00000");
 
         for (TestFile file: this.tested){
 
             // true positive classification as spam
-            if (file.getActualClass() == "spam" && file.getGuessedClass() == "spam"){
+            if (file.getActualClass().equals("Spam") && file.getGuessedClass().equals("spam")){
                 truePos ++;
 
             // false negative classification of spam
-            } else if(file.getActualClass() == "spam" && file.getGuessedClass() == "ham"){
+            } else if(file.getActualClass().equals("Spam") && file.getGuessedClass().equals("ham")){
                 falseNeg ++;
 
             // true negative classification of spam
-            } else if(file.getActualClass() == "ham" && file.getGuessedClass() == "ham"){
+            } else if(file.getActualClass().equals("Ham") && file.getGuessedClass().equals("ham")){
                 trueNeg ++;
 
             // false positive classification of spam
-            } else if(file.getActualClass() == "ham" && file.getGuessedClass() == "spam"){
+            } else if(file.getActualClass().equals("Ham") && file.getGuessedClass().equals("spam")){
                 falsePos ++;
             }
         }
-        precisionAccuracy[0] = truePos/(falsePos + truePos);
-        precisionAccuracy[1] = (truePos + trueNeg)/(this.hamCount + this.spamCount);
+        //System.out.printf("%d %d %d %d", truePos, falseNeg, trueNeg, falsePos);
+        precisionAccuracy[0] = df.format(truePos/(falsePos + truePos));
+        precisionAccuracy[1] = df.format((truePos + trueNeg)/(this.hamCount + this.spamCount));
 
         return precisionAccuracy;
     }

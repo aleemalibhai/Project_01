@@ -2,7 +2,6 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -42,7 +41,6 @@ public class SpamFilter{
             }
         }
         scanner.close();
-        System.out.println(prSW);
     }
 
     public void train() throws IOException{

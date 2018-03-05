@@ -2,6 +2,7 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.io.FileNotFoundException;
 
 
 public class SpamFilter{
@@ -19,19 +21,28 @@ public class SpamFilter{
     private File trainDir;
     private File testDir;
     private TreeMap<String,Double> prSW;
-    private TreeMap<String,Integer> hamFreq;
-    private TreeMap<String,Integer> spamFreq;
+    private TreeMap<String,Double> hamFreq;
+    private TreeMap<String,Double> spamFreq;
     private ObservableList<TestFile> tested;
 
     // obstinate with testing and training folders defined
-    public SpamFilter(File trainDirectory, File testDirectory){
+    public SpamFilter(File trainDirectory, File testDirectory) throws FileNotFoundException{
 
         trainDir = trainDirectory;
         testDir = testDirectory;
         hamFreq = new TreeMap<>();
         spamFreq = new TreeMap<>();
         prSW = new TreeMap<>();
-
+        Scanner scanner = new Scanner(new File("sWords_list.txt"));
+        while(scanner.hasNextLine()){
+            if(isWord(scanner.nextLine())) {
+                if (!prSW.containsKey(scanner.nextLine())) {
+                    prSW.put(scanner.nextLine(), 0.71);
+                }
+            }
+        }
+        scanner.close();
+        System.out.println(prSW);
     }
 
     public void train() throws IOException{
@@ -62,10 +73,10 @@ public class SpamFilter{
                     this.hamCount ++;
                     for (String element : words) {
                         if (hamFreq.containsKey(element)) {
-                            int oldCount = hamFreq.get(element);
+                            double oldCount = hamFreq.get(element);
                             hamFreq.put(element, oldCount + 1);
                         } else {
-                            hamFreq.put(element, 1);
+                            hamFreq.put(element, 1.0);
                         }
                     }
 
@@ -74,10 +85,10 @@ public class SpamFilter{
                     this.spamCount ++;
                     for (String element : words) {
                         if (spamFreq.containsKey(element)) {
-                            int oldCount = spamFreq.get(element);
+                            double oldCount = spamFreq.get(element);
                             spamFreq.put(element, oldCount + 1);
                         } else {
-                            spamFreq.put(element, 1);
+                            spamFreq.put(element, 1.0);
                         }
                     }
 
@@ -85,7 +96,7 @@ public class SpamFilter{
             }
         }
         // add probabilities from ham file
-        for (Map.Entry<String, Integer> entry: hamFreq.entrySet()){
+        for (Map.Entry<String, Double> entry: hamFreq.entrySet()){
             if (!prSW.containsKey(entry.getKey())){
                 if (spamFreq.containsKey(entry.getKey())){
                     prSW.put(entry.getKey(), (spamFreq.get(entry.getKey())/spamCount) / ((hamFreq.get(entry.getKey())/hamCount)+(spamFreq.get(entry.getKey())/spamCount)));
@@ -93,7 +104,7 @@ public class SpamFilter{
             }
         }
         // check spamFreq to find probabilities of words not in ham
-        for (Map.Entry<String, Integer> entry: spamFreq.entrySet()){
+        for (Map.Entry<String, Double> entry: spamFreq.entrySet()){
             if (!prSW.containsKey(entry.getKey())){
                 if (hamFreq.containsKey(entry.getKey())){
                     prSW.put(entry.getKey(), (spamFreq.get(entry.getKey())/spamCount) / ((hamFreq.get(entry.getKey())/hamCount)+(spamFreq.get(entry.getKey())/spamCount)));
@@ -104,7 +115,7 @@ public class SpamFilter{
 
     // testing
     public ObservableList<TestFile> test() throws IOException{
-        // return arraylist
+        // return array list
         ObservableList<TestFile> testedFiles = FXCollections.observableArrayList();
         // parse through test directory
         // file array consisting of ham, spam folders
@@ -121,13 +132,10 @@ public class SpamFilter{
                 // set actual class
                 if (current.getName().equals("ham")){
                     testing.setActualClass("Ham");
-                }else if (current.getName().equals("spam")){
+                }else if (current.getName().equals("spam")) {
                     testing.setActualClass("Spam");
                 }
-                this.testTotal++;
                 // get probability
-                // sum variable
-                double sum = 0;
                 // parse over file and create list of words
                 ArrayList<String> words = new ArrayList();
                 Scanner scanner = new Scanner(file);
@@ -135,22 +143,22 @@ public class SpamFilter{
                 while (scanner.hasNext()) {
                     String word = scanner.next();
                     if (isWord(word)) {
-                        // populate word list per fileham
+                        // populate word list per file ham
                         if (!words.contains(word)) {
                             words.add(word);
                         }
                     }
                 }
+                // sum variable
+                double sum = 0;
                 for (String word: words){
                     // check if it is in training map, ignore if not present
-                    if (prSW.containsKey(word)){
-                        sum += ((Math.log(1 - (prSW.get(word))))-(Math.log(prSW.get(word))));
-                        if(prSW.get(word) >= 1) {
-                            System.out.println(prSW.get(word));
-                        }
+                    if (prSW.containsKey(word)) {
+                        sum += ((Math.log(1 - (prSW.get(word)))) - (Math.log(prSW.get(word))));
                     }
+                    // System.out.println(sum);
                 }
-                testing.setSpamProbability(1/(1+(Math.pow(Math.E, sum))));
+                testing.setSpamProbability(1.0/(1.0+(Math.pow(Math.E, sum))));
                 testing.setguessedClass();
                 testedFiles.add(testing);
             }
@@ -164,7 +172,6 @@ public class SpamFilter{
         double truePos = 0;
         double trueNeg = 0;
         double falsePos = 0;
-        double falseNeg = 0;
         DecimalFormat df = new DecimalFormat("0.00000");
 
         for (TestFile file: this.tested){
@@ -172,10 +179,6 @@ public class SpamFilter{
             // true positive classification as spam
             if (file.getActualClass().equals("Spam") && file.getGuessedClass().equals("spam")){
                 truePos ++;
-
-            // false negative classification of spam
-            } else if(file.getActualClass().equals("Spam") && file.getGuessedClass().equals("ham")){
-                falseNeg ++;
 
             // true negative classification of spam
             } else if(file.getActualClass().equals("Ham") && file.getGuessedClass().equals("ham")){
@@ -185,6 +188,8 @@ public class SpamFilter{
             } else if(file.getActualClass().equals("Ham") && file.getGuessedClass().equals("spam")){
                 falsePos ++;
             }
+            // Test file counter
+            this.testTotal++;
         }
         precisionAccuracy[0] = df.format(truePos/(falsePos + truePos));
         precisionAccuracy[1] = df.format((truePos + trueNeg)/(this.testTotal));

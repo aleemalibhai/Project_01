@@ -2,7 +2,6 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -34,6 +33,7 @@ public class SpamFilter{
         spamFreq = new TreeMap<>();
         prSW = new TreeMap<>();
         Scanner scanner = new Scanner(new File("sWords_list.txt"));
+        scanner.useDelimiter("\\s");
         while(scanner.hasNextLine()){
             if(isWord(scanner.nextLine())) {
                 if (!prSW.containsKey(scanner.nextLine())) {
@@ -42,7 +42,6 @@ public class SpamFilter{
             }
         }
         scanner.close();
-        System.out.println(prSW);
     }
 
     public void train() throws IOException{

@@ -9,7 +9,7 @@ public class TestFile {
     private String guessedClass;
 
     public TestFile(){}
-    
+
     // accessor methods
     public String getFileName() { return this.fileName; }
     public double getSpamProbability() { return this.spamProbability; }

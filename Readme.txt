@@ -6,7 +6,7 @@ Date: 05/03/2018
 
 GitHub Link: https://github.com/aleemalibhai/Project_01
 
-Installation: Down the repository; the project will e an intelliJ project.
+Installation: Download the repository; the project will e an intelliJ project.
 
 
 Usage:

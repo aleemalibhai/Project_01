@@ -50,16 +50,18 @@ public class SpamFilter{
         File[] contents = trainDir.listFiles();
         // parses through each folder (spam or ham) individually
         for (File current : contents) {
-            // create list of files
+            // loops through folder and creates a list of files
             File[] files = current.listFiles();
-            // parse through files
+            // parse through all files
             for (File file : files) {
                 // create list of words contained in file
                 ArrayList<String> words = new ArrayList();
                 Scanner scanner = new Scanner(file);
-                scanner.useDelimiter("\\s");//"[\s\.;:\?\!,]");//" \t\n.;,!?-/\\");
+                // delim on space
+                scanner.useDelimiter("\\s");
                 while (scanner.hasNext()) {
                     String word = scanner.next();
+                    // check for duplicates
                     if (isWord(word)) {
                         // populate word list per file
                         if (!words.contains(word)) {
@@ -68,18 +70,23 @@ public class SpamFilter{
                     }
                 }
                 // adjusts the ham frequency map according to words found in file
+                // check what folder we are in
                 if (current.getName().equals("ham")) {
+                    // increment ham count
                     this.hamCount ++;
+                    // parse through word list
                     for (String element : words) {
                         if (hamFreq.containsKey(element)) {
+                            // get the old count and one to it
                             double oldCount = hamFreq.get(element);
-                            hamFreq.put(element, oldCount + 1);
+                            hamFreq.put(element, oldCount + 1.0);
                         } else {
+                            // create element with a count of one if id does not exist
                             hamFreq.put(element, 1.0);
                         }
                     }
 
-                    // adjusts the spam frequency map according to words found in file
+                // adjusts the spam frequency map according to words found in file
                 } else if (current.getName().equals("spam")) {
                     this.spamCount ++;
                     for (String element : words) {
@@ -114,7 +121,7 @@ public class SpamFilter{
 
     // testing
     public ObservableList<TestFile> test() throws IOException{
-        // return array list
+        // returns Observable list with all tested files
         ObservableList<TestFile> testedFiles = FXCollections.observableArrayList();
         // parse through test directory
         // file array consisting of ham, spam folders
@@ -138,11 +145,11 @@ public class SpamFilter{
                 // parse over file and create list of words
                 ArrayList<String> words = new ArrayList();
                 Scanner scanner = new Scanner(file);
-                scanner.useDelimiter("\\s");//"[\s\.;:\?\!,]");//" \t\n.;,!?-/\\");
+                scanner.useDelimiter("\\s");
                 while (scanner.hasNext()) {
                     String word = scanner.next();
                     if (isWord(word)) {
-                        // populate word list per file ham
+                        // populate word list per file
                         if (!words.contains(word)) {
                             words.add(word);
                         }
@@ -150,15 +157,19 @@ public class SpamFilter{
                 }
                 // sum variable
                 double sum = 0;
+                // parse through word list and get probabilities
                 for (String word: words){
                     // check if it is in training map, ignore if not present
+                    // add to the sum
                     if (prSW.containsKey(word)) {
                         sum += ((Math.log(1 - (prSW.get(word)))) - (Math.log(prSW.get(word))));
                     }
-                    // System.out.println(sum);
                 }
+                // set the calculated spam probability
                 testing.setSpamProbability(1.0/(1.0+(Math.pow(Math.E, sum))));
+                // set class depending on probability
                 testing.setguessedClass();
+                // add file to Observable List
                 testedFiles.add(testing);
             }
         }
@@ -167,6 +178,7 @@ public class SpamFilter{
     }
 
     public String[] getPrecisionAccuracy(){
+        // String array that has precision and accuracy
         String[] precisionAccuracy = new String[2];
         double truePos = 0;
         double trueNeg = 0;
@@ -190,12 +202,13 @@ public class SpamFilter{
             // Test file counter
             this.testTotal++;
         }
+        // make values ready to be displayed
         precisionAccuracy[0] = df.format(truePos/(falsePos + truePos));
         precisionAccuracy[1] = df.format((truePos + trueNeg)/(this.testTotal));
 
         return precisionAccuracy;
     }
-
+    // checks if the parsed entry is a word
     private boolean isWord(String word) {
         String pattern = "^[a-zA-Z]+$";
         return (word.matches(pattern));

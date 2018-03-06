@@ -9,12 +9,8 @@ public class TestFile {
     private String guessedClass;
 
     public TestFile(){}
-    public TestFile(String filename, double spamProbability, String actualClass) {
-        this.fileName = filename;
-        this.spamProbability = spamProbability;
-        this.actualClass = actualClass;
-    }
-
+    
+    // accessor methods
     public String getFileName() { return this.fileName; }
     public double getSpamProbability() { return this.spamProbability; }
     public String getSpamProbRounded() {
@@ -24,6 +20,7 @@ public class TestFile {
     public String getActualClass() { return this.actualClass; }
     public String getGuessedClass() { return this.guessedClass; }
 
+    // mutator methods
     public void setFileName(String value) { this.fileName = value; }
     public void setSpamProbability(double val) { this.spamProbability = val; }
     public void setActualClass(String value) { this.actualClass = value; }
